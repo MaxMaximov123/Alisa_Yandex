@@ -59,7 +59,6 @@ def handle_dialog(req, res):
             st[1] = 1
             sessionStorage[user_id] = {
                 'suggests': [
-                    ''
                     "Не хочу.",
                     "Не буду.",
                     "Отстань!",
