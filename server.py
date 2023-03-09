@@ -54,16 +54,17 @@ def handle_dialog(req, res):
             res['response']['end_session'] = True
             res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!'
         else:
-            res['response']['buttons'] = get_suggests(user_id)
             res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!\nКупи {"Кролика"}'
             st[0] = 'Кролика'
             sessionStorage[user_id] = {
                 'suggests': [
+                    ''
                     "Не хочу.",
                     "Не буду.",
                     "Отстань!",
                 ]
             }
+            res['response']['buttons'] = get_suggests(user_id)
         return
 
     res['response']['text'] = \
