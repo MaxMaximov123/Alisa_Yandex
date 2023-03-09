@@ -31,7 +31,7 @@ def main():
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
-    if req['session']['new']:
+    if req['session']['new'] or hist[req['session']['session_id']] == 'Кролика':
         sessionStorage[user_id] = {
             'suggests': [
                 "Не хочу.",
@@ -39,8 +39,9 @@ def handle_dialog(req, res):
                 "Отстань!",
             ]
         }
-        res['response']['text'] = 'Привет! Купи слона!'
-        hist[req['session']['session_id']] = 'Слона'
+        res['response']['text'] = f'''Купи {hist[req['session']['session_id']].lower()}!'''
+        if req['session']['new']:
+            hist[req['session']['session_id']] = 'Слона'
         res['response']['buttons'] = get_suggests(user_id)
         return
 
