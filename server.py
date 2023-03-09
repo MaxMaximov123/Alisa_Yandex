@@ -31,7 +31,6 @@ def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
     if req['session']['new']:
-
         sessionStorage[user_id] = {
             'suggests': [
                 "Не хочу.",
@@ -48,7 +47,7 @@ def handle_dialog(req, res):
         'куплю',
         'покупаю',
         'хорошо'
-    ]:
+    ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
         res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
         res['response']['end_session'] = True
         return
@@ -65,7 +64,7 @@ def get_suggests(user_id):
         {'title': suggest, 'hide': True}
         for suggest in session['suggests'][:2]
     ]
-    session['   suggests'] = session['suggests'][1:]
+    session['suggests'] = session['suggests'][1:]
     sessionStorage[user_id] = session
 
     if len(suggests) < 2:
