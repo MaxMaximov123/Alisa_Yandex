@@ -42,6 +42,7 @@ def handle_dialog(req, res):
         res['response']['buttons'] = get_suggests(user_id)
         return
 
+
     if req['request']['original_utterance'].lower() in [
         'ладно',
         'куплю',
