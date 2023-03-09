@@ -39,9 +39,9 @@ def handle_dialog(req, res):
                 "Отстань!",
             ]
         }
-        res['response']['text'] = f'''Купи {hist[req['session']['session_id']].lower()}!'''
         if req['session']['new']:
             hist[req['session']['session_id']] = 'Слона'
+        res['response']['text'] = f'''Купи {hist[req['session']['session_id']].lower()}!'''
         res['response']['buttons'] = get_suggests(user_id)
         return
 
