@@ -13,6 +13,7 @@ hist = {}
 
 @app.route('/post', methods=['POST'])
 def main():
+    global sessionStorage
     logging.info(f'Request: {request.json!r}')
 
     response = {
@@ -29,6 +30,7 @@ def main():
 
 
 def handle_dialog(req, res):
+    global sessionStorage
     user_id = req['session']['user_id']
 
     if req['session']['new'] or hist.get(req['session']['session_id'], '')[1]:
@@ -51,11 +53,13 @@ def handle_dialog(req, res):
         'покупаю',
         'хорошо'
     ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
-        res['response']['text'] = f'''{hist[req['session']['session_id']][0]} можно найти на Яндекс.Маркете!'''
+        res['response']['text'] = f'''{hist[req['session']['session_id']][0]} можно найти на Яндекс.Маркете!
+Купи кролика'''
         if hist[req['session']['session_id']][1]:
             res['response']['end_session'] = True
         else:
             hist[req['session']['session_id']][0] = 'Кролика'
+            sessionStorage = {}
         return
 
     res['response']['text'] = \
@@ -64,6 +68,7 @@ def handle_dialog(req, res):
 
 
 def get_suggests(user_id):
+    global sessionStorage
     session = sessionStorage[user_id]
 
     suggests = [
@@ -76,7 +81,7 @@ def get_suggests(user_id):
     if len(suggests) < 2:
         suggests.append({
             "title": "Ладно",
-            "url": "https://market.yandex.ru/search?text=слон",
+            "url": "https://market.yandex.ru/",
             "hide": True
         })
 
