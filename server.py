@@ -8,12 +8,11 @@ app = Flask(__name__)
 # Устанавливаем уровень логирования
 logging.basicConfig(level=logging.INFO)
 sessionStorage = {}
-hist = {}
+st = ['Слона', 0]
 
 
 @app.route('/post', methods=['POST'])
 def main():
-    global sessionStorage
     logging.info(f'Request: {request.json!r}')
 
     response = {
@@ -33,7 +32,7 @@ def handle_dialog(req, res):
     global sessionStorage
     user_id = req['session']['user_id']
 
-    if req['session']['new'] or hist.get(req['session']['session_id'], '')[1]:
+    if req['session']['new'] or st[1]:
         sessionStorage[user_id] = {
             'suggests': [
                 "Не хочу.",
@@ -41,9 +40,7 @@ def handle_dialog(req, res):
                 "Отстань!",
             ]
         }
-        if req['session']['new']:
-            hist[req['session']['session_id']] = ['Слона', 0]
-        res['response']['text'] = f'''Купи {hist[req['session']['session_id']][0].lower()}!'''
+        res['response']['text'] = f'Привет! Купи {st[0].lower()}!'
         res['response']['buttons'] = get_suggests(user_id)
         return
 
@@ -53,22 +50,25 @@ def handle_dialog(req, res):
         'покупаю',
         'хорошо'
     ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
-        res['response']['text'] = f'''{hist[req['session']['session_id']][0]} можно найти на Яндекс.Маркете!
-Купи кролика'''
-        if hist[req['session']['session_id']][1]:
+        res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!\nКупи {"Кролика"}'
+        st[0] = 'Кролика'
+        sessionStorage[user_id] = {
+            'suggests': [
+                "Не хочу.",
+                "Не буду.",
+                "Отстань!",
+            ]
+        }
+        if st[1]:
             res['response']['end_session'] = True
-        else:
-            hist[req['session']['session_id']][0] = 'Кролика'
-            sessionStorage = {}
         return
 
     res['response']['text'] = \
-        f"Все говорят '{req['request']['original_utterance']}', а ты купи {hist[req['session']['session_id']][0].lower()}!"
+        f"Все говорят '{req['request']['original_utterance']}', а ты купи {st[0].lower()}!"
     res['response']['buttons'] = get_suggests(user_id)
 
 
 def get_suggests(user_id):
-    global sessionStorage
     session = sessionStorage[user_id]
 
     suggests = [
@@ -81,7 +81,7 @@ def get_suggests(user_id):
     if len(suggests) < 2:
         suggests.append({
             "title": "Ладно",
-            "url": "https://market.yandex.ru/",
+            "url": "https://market.yandex.ru/search",
             "hide": True
         })
 
