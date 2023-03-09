@@ -50,17 +50,20 @@ def handle_dialog(req, res):
         'покупаю',
         'хорошо'
     ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
-        res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!\nКупи {"Кролика"}'
-        st[0] = 'Кролика'
-        sessionStorage[user_id] = {
-            'suggests': [
-                "Не хочу.",
-                "Не буду.",
-                "Отстань!",
-            ]
-        }
         if st[1]:
             res['response']['end_session'] = True
+            res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!'
+        else:
+            res['response']['buttons'] = get_suggests(user_id)
+            res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!\nКупи {"Кролика"}'
+            st[0] = 'Кролика'
+            sessionStorage[user_id] = {
+                'suggests': [
+                    "Не хочу.",
+                    "Не буду.",
+                    "Отстань!",
+                ]
+            }
         return
 
     res['response']['text'] = \
@@ -81,7 +84,7 @@ def get_suggests(user_id):
     if len(suggests) < 2:
         suggests.append({
             "title": "Ладно",
-            "url": "https://market.yandex.ru/search",
+            "url": f"https://market.yandex.ru/search?text={st[0]}",
             "hide": True
         })
 
