@@ -52,7 +52,7 @@ def handle_dialog(req, res):
         'покупаю',
         'хорошо'
     ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
-        if st[1] == 1:
+        if st[1]:
             res['response']['end_session'] = True
             res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!'
         elif st[1] == 0:
