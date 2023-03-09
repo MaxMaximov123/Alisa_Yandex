@@ -31,7 +31,7 @@ def main():
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
-    if req['session']['new'] or hist.get(req['session']['session_id'], '') == 'Кролика':
+    if req['session']['new'] or hist.get(req['session']['session_id'], '')[1]:
         sessionStorage[user_id] = {
             'suggests': [
                 "Не хочу.",
@@ -40,8 +40,8 @@ def handle_dialog(req, res):
             ]
         }
         if req['session']['new']:
-            hist[req['session']['session_id']] = 'Слона'
-        res['response']['text'] = f'''Купи {hist[req['session']['session_id']].lower()}!'''
+            hist[req['session']['session_id']] = ['Слона', 0]
+        res['response']['text'] = f'''Купи {hist[req['session']['session_id']][0].lower()}!'''
         res['response']['buttons'] = get_suggests(user_id)
         return
 
@@ -51,15 +51,15 @@ def handle_dialog(req, res):
         'покупаю',
         'хорошо'
     ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
-        res['response']['text'] = f'''{hist[req['session']['session_id']]} можно найти на Яндекс.Маркете!'''
-        if hist[req['session']['session_id']] == "Кролика":
+        res['response']['text'] = f'''{hist[req['session']['session_id']][0]} можно найти на Яндекс.Маркете!'''
+        if hist[req['session']['session_id']][1]:
             res['response']['end_session'] = True
         else:
-            hist[req['session']['session_id']] = 'Кролика'
+            hist[req['session']['session_id']][0] = 'Кролика'
         return
 
     res['response']['text'] = \
-        f"Все говорят '{req['request']['original_utterance']}', а ты купи {hist[req['session']['session_id']].lower()}!"
+        f"Все говорят '{req['request']['original_utterance']}', а ты купи {hist[req['session']['session_id']][0].lower()}!"
     res['response']['buttons'] = get_suggests(user_id)
 
 
