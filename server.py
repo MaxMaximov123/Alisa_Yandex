@@ -40,6 +40,8 @@ def handle_dialog(req, res):
                 "Отстань!",
             ]
         }
+        if st[1] == 1:
+            st[1] = 2
         res['response']['text'] = f'Привет! Купи {st[0].lower()}!'
         res['response']['buttons'] = get_suggests(user_id)
         return
@@ -50,10 +52,10 @@ def handle_dialog(req, res):
         'покупаю',
         'хорошо'
     ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
-        if st[1]:
+        if st[1] == 1:
             res['response']['end_session'] = True
             res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!'
-        else:
+        elif st[1] == 0:
             res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!\nКупи {"Кролика"}'
             st[0] = 'Кролика'
             st[1] = 1
