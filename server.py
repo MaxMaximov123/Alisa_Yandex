@@ -32,7 +32,7 @@ def handle_dialog(req, res):
     global sessionStorage
     user_id = req['session']['user_id']
 
-    if req['session']['new'] or st[1]:
+    if req['session']['new'] or st[1] == 1:
         sessionStorage[user_id] = {
             'suggests': [
                 "Не хочу.",
