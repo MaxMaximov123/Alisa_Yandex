@@ -56,6 +56,7 @@ def handle_dialog(req, res):
         else:
             res['response']['text'] = f'{st[0]} можно найти на Яндекс.Маркете!\nКупи {"Кролика"}'
             st[0] = 'Кролика'
+            st[1] = 1
             sessionStorage[user_id] = {
                 'suggests': [
                     ''
