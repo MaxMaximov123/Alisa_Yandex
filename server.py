@@ -8,6 +8,7 @@ app = Flask(__name__)
 # Устанавливаем уровень логирования
 logging.basicConfig(level=logging.INFO)
 sessionStorage = {}
+hist = {}
 
 
 @app.route('/post', methods=['POST'])
@@ -39,9 +40,9 @@ def handle_dialog(req, res):
             ]
         }
         res['response']['text'] = 'Привет! Купи слона!'
+        hist[req['session']['session_id']] = 'Слона'
         res['response']['buttons'] = get_suggests(user_id)
         return
-
 
     if req['request']['original_utterance'].lower() in [
         'ладно',
@@ -49,12 +50,15 @@ def handle_dialog(req, res):
         'покупаю',
         'хорошо'
     ] or any([i in ['ладно', 'куплю', 'покупаю', 'хорошо'] for i in req['request']['nlu']['tokens']]):
-        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
-        res['response']['end_session'] = True
+        res['response']['text'] = f'''{hist[req['session']['session_id']]} можно найти на Яндекс.Маркете!'''
+        if hist[req['session']['session_id']] == "Кролика":
+            res['response']['end_session'] = True
+        else:
+            hist[req['session']['session_id']] = 'Кролика'
         return
 
     res['response']['text'] = \
-        f"Все говорят '{req['request']['original_utterance']}', а ты купи слона!"
+        f"Все говорят '{req['request']['original_utterance']}', а ты купи {hist[req['session']['session_id']].lower()}!"
     res['response']['buttons'] = get_suggests(user_id)
 
 
