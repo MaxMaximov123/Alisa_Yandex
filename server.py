@@ -25,7 +25,7 @@ def main():
 
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
-    words = req['request ']['nlu ']['tokens']
+    words = req['request']['nlu ']['tokens']
     print(req['request']['nlu']['entities'])
     if 'переведи ' in words and 'слово' in words:
         pass
