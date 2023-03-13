@@ -74,18 +74,15 @@ def handle_dialog(res, req):
                           + first_name.title() \
                           + '. Я - Алиса. Какой город хочешь увидеть?'
             # получаем варианты buttons из ключей нашего словаря cities
-            res['response']['buttons'] = [
+            res['response']['buttons'] += [
                 {
                     'title': city.title(),
                     'hide': True
                 } for city in cities
-            ] + res['response']['buttons']
+            ]
     # если мы знакомы с пользователем и он нам что-то написал,
     # то это говорит о том, что он уже говорит о городе,
     # что хочет увидеть.
-    elif 'Помощь' in req['request']['original_utterance']:
-        res['response']['text'] = """Для начала игры вы должны указать свое имя.
-Далее вы вибираете город, и если я его знаю, то отправляю вам фотографию этого города"""
     else:
         # ищем город в сообщение от пользователя
         city = get_city(req)
@@ -102,12 +99,16 @@ def handle_dialog(res, req):
         else:
             res['response']['text'] = \
                 'Первый раз слышу об этом городе. Попробуй еще разок!'
-        res['response']['buttons'] = [
+        res['response']['buttons'] += [
             {
                 'title': city.title(),
                 'hide': True
             } for city in cities
-        ] + res['response']['buttons']
+        ]
+
+    if 'Помощь' in req['request']['original_utterance']:
+        res['response']['text'] = """Для начала игры вы должны указать свое имя.
+    Далее вы вибираете город, и если я его знаю, то отправляю вам фотографию этого города"""
 
 
 def get_city(req):
