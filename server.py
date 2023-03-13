@@ -33,7 +33,15 @@ def main():
 
 
 def handle_dialog(res, req):
+    res['response']['buttons'] = [
+        {
+            'title': 'Помощь',
+            'hide': True
+        }]
     user_id = req['session']['user_id']
+    if 'Помощь' in req['request']['original_utterance']:
+        res['response']['text'] = """Для начала игры вы должны указать свое имя.
+        Далее я отправляю вам фотографию города, ваша задача - узнать город"""
     if req['session']['new']:
         res['response']['text'] = 'Привет! Назови своё имя!'
         sessionStorage[user_id] = {
@@ -53,7 +61,7 @@ def handle_dialog(res, req):
             # как видно из предыдущего навыка, сюда мы попали, потому что пользователь написал своем имя.
             # Предлагаем ему сыграть и два варианта ответа "Да" и "Нет".
             res['response']['text'] = f'Приятно познакомиться, {first_name.title()}. Я Алиса. Отгадаешь город по фото?'
-            res['response']['buttons'] = [
+            res['response']['buttons'] += [
                 {
                     'title': 'Да',
                     'hide': True
@@ -88,7 +96,7 @@ def handle_dialog(res, req):
                 res['end_session'] = True
             else:
                 res['response']['text'] = 'Не поняла ответа! Так да или нет?'
-                res['response']['buttons'] = [
+                res['response']['buttons'] += [
                     {
                         'title': 'Да',
                         'hide': True
