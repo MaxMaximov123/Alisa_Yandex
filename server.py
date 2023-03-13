@@ -137,6 +137,7 @@ def play_game(res, req):
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
         country = sessionStorage[user_id]['country']
+        print(get_country(req), country)
         # проверяем есть ли правильный ответ в сообщение
         if not sessionStorage[user_id]['countr'] and get_city(req) == city:
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
@@ -188,6 +189,16 @@ def play_game(res, req):
             return
         elif sessionStorage[user_id]['countr']:
             res['response']['text'] = f'Вы пытались. Это {country.title()}. Сыграем ещё?'
+            res['response']['buttons'] += [
+
+                {
+                    'title': 'Да',
+                    'hide': True
+                },
+                {
+                    'title': 'Нет',
+                    'hide': True
+                },]
             sessionStorage[user_id]['game_started'] = False
             sessionStorage[user_id]['guessed_cities'].append(city)
             return
