@@ -44,6 +44,7 @@ def main():
 
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
+    res['response']['buttons'] = [{'title': 'Помощь', 'hide': True}]
 
     # если пользователь новый, то просим его представиться.
     if req['session']['new']:
@@ -78,7 +79,7 @@ def handle_dialog(res, req):
                     'title': city.title(),
                     'hide': True
                 } for city in cities
-            ] + [{'title': 'Помощь', 'hide': True}]
+            ] + res['response']['buttons']
     # если мы знакомы с пользователем и он нам что-то написал,
     # то это говорит о том, что он уже говорит о городе,
     # что хочет увидеть.
@@ -106,7 +107,7 @@ def handle_dialog(res, req):
                 'title': city.title(),
                 'hide': True
             } for city in cities
-        ]
+        ] + res['response']['buttons']
 
 
 def get_city(req):
