@@ -137,13 +137,16 @@ def play_game(res, req):
         city = sessionStorage[user_id]['city']
         country = sessionStorage[user_id]['country']
         # проверяем есть ли правильный ответ в сообщение
-        if get_city(req) == city:
+        if not sessionStorage[user_id]['countr'] and get_city(req) == city:
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
             # отправляем пользователя на второй круг. Обратите внимание на этот шаг на схеме.
             res['response']['text'] = 'Правильно! А в какой стране этот город?'
             sessionStorage[user_id]['country'] = geo.get_geo_info(city, 'country')
+            sessionStorage[user_id]['guessed_cities'].append(city)
+            sessionStorage[user_id]['game_started'] = False
+            sessionStorage[user_id]['countr'] = True
             return
-        else:
+        elif not sessionStorage[user_id]['countr']:
             # если нет
             if attempt == len(cities):
                 # если попытка третья, то значит, что все картинки мы показали.
@@ -162,7 +165,7 @@ def play_game(res, req):
                 res['response']['card']['image_id'] = cities[city][attempt - 1]
                 res['response']['text'] = 'А вот и не угадал!'
 
-        if get_country(req) == country:
+        if sessionStorage[user_id]['countr'] and get_country(req) == country:
             res['response']['text'] = 'Правильно! Сыграем ещё?'
             res['response']['buttons'] += [
 
@@ -183,7 +186,7 @@ def play_game(res, req):
             sessionStorage[user_id]['guessed_cities'].append(city)
             sessionStorage[user_id]['game_started'] = False
             return
-        else:
+        elif sessionStorage[user_id]['countr']:
             res['response']['text'] = f'Вы пытались. Это {country.title()}. Сыграем ещё?'
             sessionStorage[user_id]['game_started'] = False
             sessionStorage[user_id]['guessed_cities'].append(city)
