@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import logging
+from deep_translator import GoogleTranslator
 
 app = Flask(__name__)
 
@@ -25,13 +26,13 @@ def main():
 
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
+    if req['session']['new']:
+        res['response']['text'] = 'Привет! Скажи мне переведи слово {слово}, и я его переведу'
+        return
     words = req['request']['nlu']['tokens']
-    print(req['request']['nlu']['entities'])
     if 'переведи ' in words and 'слово' in words:
-        pass
-    res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
-    res['response']['end_session'] = True
-    return
+        res['response']['text'] = GoogleTranslator(source='auto', target='en').translate(words[-1])
+        return
 
 
 # Функция возвращает две подсказки для ответа.
