@@ -145,6 +145,7 @@ def play_game(res, req):
         if get_country(req) == country:
             res['response']['text'] = 'Правильно! Сыграем ещё?'
             res['response']['buttons'] += [
+
                 {
                     'title': 'Да',
                     'hide': True
