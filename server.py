@@ -39,6 +39,7 @@ def handle_dialog(res, req):
             'title': 'Помощь',
             'hide': True
         }]
+
     user_id = req['session']['user_id']
     if req['session']['new']:
         res['response']['text'] = 'Привет! Назови своё имя!'
