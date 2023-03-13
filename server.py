@@ -31,6 +31,8 @@ def handle_dialog(req, res):
         return
     words = req['request']['nlu']['tokens']
     if 'переведи ' in words and 'слово' in words:
+        print(words)
+        print(GoogleTranslator(source='auto', target='en').translate(words[-1]))
         res['response']['text'] = GoogleTranslator(source='auto', target='en').translate(words[-1])
         return
 
