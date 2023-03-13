@@ -137,6 +137,7 @@ def play_game(res, req):
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
         country = sessionStorage[user_id]['country']
+        print(country, get_country(req))
         # проверяем есть ли правильный ответ в сообщение
         if not sessionStorage[user_id]['countr'] and get_city(req) == city:
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
