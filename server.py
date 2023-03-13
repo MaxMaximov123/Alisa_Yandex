@@ -126,7 +126,7 @@ def play_game(res, req):
         # записываем город в информацию о пользователе
         sessionStorage[user_id]['city'] = city
         sessionStorage[user_id]['countr'] = False
-        sessionStorage[user_id]['country'] = geo.get_geo_info(city, 'country')
+        sessionStorage[user_id]['country'] = geo.get_geo_info(city, 'country').lower()
         # добавляем в ответ картинку
         res['response']['card'] = {}
         res['response']['card']['type'] = 'BigImage'
@@ -136,7 +136,7 @@ def play_game(res, req):
     else:
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
-        country = sessionStorage[user_id]['country'].capitalize()
+        country = sessionStorage[user_id]['country']
         # проверяем есть ли правильный ответ в сообщение
         if not sessionStorage[user_id]['countr'] and get_city(req) == city:
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
@@ -221,7 +221,10 @@ def get_country(req):
         # если тип YANDEX.GEO, то пытаемся получить город(city), если нет, то возвращаем None
         if entity['type'] == 'YANDEX.GEO':
             # возвращаем None, если не нашли сущности с типом YANDEX.GEO
-            return entity['value'].get('country', None)
+            a = entity['value'].get('country', None)
+            if a is not None:
+                return a.lower()
+            return a
 
 
 def get_first_name(req):
