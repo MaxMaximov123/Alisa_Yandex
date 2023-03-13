@@ -143,7 +143,6 @@ def play_game(res, req):
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
             # отправляем пользователя на второй круг. Обратите внимание на этот шаг на схеме.
             res['response']['text'] = 'Правильно! А в какой стране этот город?'
-            sessionStorage[user_id]['country'] = geo.get_geo_info(city, 'country')
             sessionStorage[user_id]['guessed_cities'].append(city)
             sessionStorage[user_id]['countr'] = True
             return
@@ -223,6 +222,8 @@ def get_country(req):
         if entity['type'] == 'YANDEX.GEO':
             # возвращаем None, если не нашли сущности с типом YANDEX.GEO
             a = entity['value'].get('country', None)
+            if a is not None:
+                return a.lower()
             return a
 
 
