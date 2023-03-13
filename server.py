@@ -30,11 +30,13 @@ def handle_dialog(req, res):
         res['response']['text'] = 'Привет! Скажи мне переведи слово {слово}, и я его переведу'
         return
     words = req['request']['nlu']['tokens']
-    if 'переведи ' in words and 'слово' in words:
+    if 'переведи' in words and 'слово' in words:
         print(words)
         print(GoogleTranslator(source='auto', target='en').translate(words[-1]))
         res['response']['text'] = GoogleTranslator(source='auto', target='en').translate(words[-1])
         return
+    else:
+        res['response']['text'] = 'Не поняла, извините, попробуйте еще раз :)'
 
 
 # Функция возвращает две подсказки для ответа.
