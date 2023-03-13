@@ -105,6 +105,8 @@ def handle_dialog(res, req):
                 ]
         else:
             play_game(res, req)
+    if 'покажи город на карте' in req['request']['original_utterance'].lower():
+        res['response']['text'] = "Открываю"
 
     if 'Помощь' in req['request']['original_utterance']:
         res['response']['text'] = """Для начала игры вы должны указать свое имя.
@@ -148,7 +150,6 @@ def play_game(res, req):
                 {
                     'title': 'Покажи город на карте',
                     'hide': False,
-                    'payload': '',
                     'url': f"https://yandex.ru/maps/?mode=search&text={city}"
                 }
             ]
