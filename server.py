@@ -39,9 +39,6 @@ def handle_dialog(res, req):
             'hide': True
         }]
     user_id = req['session']['user_id']
-    if 'Помощь' in req['request']['original_utterance']:
-        res['response']['text'] = """Для начала игры вы должны указать свое имя.
-        Далее я отправляю вам фотографию города, ваша задача - узнать город"""
     if req['session']['new']:
         res['response']['text'] = 'Привет! Назови своё имя!'
         sessionStorage[user_id] = {
@@ -108,6 +105,10 @@ def handle_dialog(res, req):
                 ]
         else:
             play_game(res, req)
+
+    if 'Помощь' in req['request']['original_utterance']:
+        res['response']['text'] = """Для начала игры вы должны указать свое имя.
+        Далее я отправляю вам фотографию города, ваша задача - узнать город"""
 
 
 def play_game(res, req):
