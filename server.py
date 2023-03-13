@@ -133,7 +133,7 @@ def play_game(res, req):
         # добавляем в ответ картинку
         res['response']['card'] = {}
         res['response']['card']['type'] = 'BigImage'
-        res['response']['card']['title'] = 'Что это за город?'
+        res['response']['card']['title'] = f'{sessionStorage[user_id]["first_name"]}, что это за город?'
         res['response']['card']['image_id'] = cities[city][attempt - 1]
         res['response']['text'] = f'{sessionStorage[user_id]["""first_name"""]}, тогда сыграем!'
     else:
