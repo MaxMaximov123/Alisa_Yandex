@@ -223,8 +223,6 @@ def get_country(req):
         if entity['type'] == 'YANDEX.GEO':
             # возвращаем None, если не нашли сущности с типом YANDEX.GEO
             a = entity['value'].get('country', None)
-            if a is not None:
-                return a.lower()
             return a
 
 
